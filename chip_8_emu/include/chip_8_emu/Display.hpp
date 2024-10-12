@@ -12,10 +12,18 @@ public:
 	void close();
 	bool isOpen();
 	void pollEvent();
-	sf::Color getPixel(uint8_t x, uint8_t y);
-	void putPixel(uint8_t x, uint8_t y, sf::Color color);
+
 	uint8_t width() const { return _width; }
 	uint8_t height() const { return _height; }
+
+	bool isPixelOn(uint8_t x, uint8_t y);
+	void putPixel(uint8_t x, uint8_t y, bool isOn);
+
+	sf::Color getPixel(uint8_t x, uint8_t y);
+	void putPixel(uint8_t x, uint8_t y, sf::Color color);
+
+	void setPixelColorOff(sf::Color color) { _pixelColorOff = color; }
+	void setPixelColorOn(sf::Color color) { _pixelColorOn = color; }
 
 private:
 	sf::RenderWindow _window;
@@ -24,4 +32,6 @@ private:
 	uint8_t _width;
 	uint8_t _height;
 	uint8_t _pixelSize;
+	sf::Color _pixelColorOff;
+	sf::Color _pixelColorOn;
 };

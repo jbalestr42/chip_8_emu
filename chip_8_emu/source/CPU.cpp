@@ -204,22 +204,21 @@ void CPU::initialize()
 					}
 				}
 
-				uint8_t posX = (startX + x) % _display.width();
-				uint8_t posY = (startY + y) % _display.height();
 				uint8_t spritePixel = spriteY & (0x80 >> x);
-				sf::Color pixelColor = _display.getPixel(posX, posY);
-
 				if (spritePixel)
 				{
+					uint8_t posX = (startX + x) % _display.width();
+					uint8_t posY = (startY + y) % _display.height();
+					bool isPixelOn = _display.isPixelOn(posX, posY);
+
 					// Pixel is colliding so we set the flag
-					if (pixelColor == sf::Color::White)
+					if (isPixelOn)
 					{
 						_registers[0xF] = 1;
 					}
 
 					// Flip the pixel color
-					// TODO: replace white and black by custom color
-					_display.putPixel(posX, posY, pixelColor == sf::Color::White ? sf::Color::Black : sf::Color::White);
+					_display.putPixel(posX, posY, !isPixelOn);
 				}
 			}
 		}

@@ -10,18 +10,10 @@ int main(int argc, char* argv[])
 	}
 
 	Chip8 emulator(60, true, true, true, true, true);
-	// TODO: crt effect for rendering
+	emulator.display().setPixelColorOff(sf::Color(35, 145, 157, 255));
+	emulator.display().setPixelColorOn(sf::Color(180, 252, 252, 255));
+	emulator.display().clear();
 
-	//if (emulator.loadRom("C:\\Users\\julie\\Documents\\GitHub\\chip_8_emu\\roms\\tests\\1-chip8-logo.ch8"))
-	//if (emulator.loadRom("C:\\Users\\julie\\Documents\\GitHub\\chip_8_emu\\roms\\tests\\2-ibm-logo.ch8"))
-	//if (emulator.loadRom("C:\\Users\\julie\\Documents\\GitHub\\chip_8_emu\\roms\\tests\\3-corax+.ch8"))
-	//if (emulator.loadRom("C:\\Users\\julie\\Documents\\GitHub\\chip_8_emu\\roms\\tests\\4-flags.ch8"))
-	//if (emulator.loadRom("C:\\Users\\julie\\Documents\\GitHub\\chip_8_emu\\roms\\tests\\5-quirks.ch8"))
-	//if (emulator.loadRom("C:\\Users\\julie\\Documents\\GitHub\\chip_8_emu\\roms\\tests\\6-keypad.ch8"))
-	//if (emulator.loadRom("C:\\Users\\julie\\Documents\\GitHub\\chip_8_emu\\roms\\tests\\7-beep.ch8"))
-	//if (emulator.loadRom("C:\\Users\\julie\\Documents\\GitHub\\chip_8_emu\\roms\\games\\BREAKOUT.ch8"))
-	//if (emulator.loadRom("C:\\Users\\julie\\Documents\\GitHub\\chip_8_emu\\roms\\games\\PONG.ch8"))
-	//if (emulator.loadRom("C:\\Users\\julie\\Documents\\GitHub\\chip_8_emu\\roms\\games\\TETRIS.ch8"))
 	if (emulator.loadRom(argv[1]))
 	{
 		emulator.initialize();

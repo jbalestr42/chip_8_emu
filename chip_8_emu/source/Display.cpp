@@ -4,7 +4,9 @@ Display::Display(uint8_t width, uint8_t height, uint8_t pixelSize, const std::st
 	_window(sf::VideoMode(width* pixelSize, height* pixelSize), title),
 	_width(width),
 	_height(height),
-	_pixelSize(pixelSize)
+	_pixelSize(pixelSize),
+	_pixelColorOff(sf::Color::Black),
+	_pixelColorOn(sf::Color::White)
 {
 	_vertices.setPrimitiveType(sf::PrimitiveType::Quads);
 	_vertices.resize(_width * _height * 4);
@@ -19,14 +21,12 @@ Display::Display(uint8_t width, uint8_t height, uint8_t pixelSize, const std::st
 			quad[2].position = sf::Vector2f(static_cast<float>((x + 1) * _pixelSize), static_cast<float>((y + 1) * _pixelSize));
 			quad[3].position = sf::Vector2f(static_cast<float>(x * _pixelSize), static_cast<float>((y + 1) * _pixelSize));
 
-			quad[0].color = sf::Color::Black;
-			quad[1].color = sf::Color::Black;
-			quad[2].color = sf::Color::Black;
-			quad[3].color = sf::Color::Black;
+			quad[0].color = _pixelColorOff;
+			quad[1].color = _pixelColorOff;
+			quad[2].color = _pixelColorOff;
+			quad[3].color = _pixelColorOff;
 		}
 	}
-	//_window.setFramerateLimit(60);
-	//_window.setVerticalSyncEnabled(true);
 }
 
 void Display::display()
@@ -39,7 +39,7 @@ void Display::clear()
 {
 	for (uint16_t i = 0; i < _width * _height * 4; i++)
 	{
-		_vertices[i].color = sf::Color::Black;
+		_vertices[i].color = _pixelColorOff;
 	}
 	_window.clear();
 }
@@ -64,6 +64,16 @@ void Display::pollEvent()
 			_window.close();
 		}
 	}
+}
+
+bool Display::isPixelOn(uint8_t x, uint8_t y)
+{
+	return getPixel(x, y) == _pixelColorOn;
+}
+
+void Display::putPixel(uint8_t x, uint8_t y, bool isOn)
+{
+	putPixel(x, y, isOn ? _pixelColorOn : _pixelColorOff);
 }
 
 sf::Color Display::getPixel(uint8_t x, uint8_t y)
