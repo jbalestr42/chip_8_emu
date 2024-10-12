@@ -13,6 +13,7 @@ int main(int argc, char* argv[])
 	emulator.display().setPixelColorOff(sf::Color(35, 145, 157, 255));
 	emulator.display().setPixelColorOn(sf::Color(180, 252, 252, 255));
 	emulator.display().clear();
+	emulator.setAudioEnabled(false);
 
 	if (emulator.loadRom(argv[1]))
 	{

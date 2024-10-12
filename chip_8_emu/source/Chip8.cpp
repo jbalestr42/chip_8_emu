@@ -4,7 +4,7 @@
 #include <fstream>
 
 Chip8::Chip8(size_t cyclesPerFrame, bool saveLoadIncrement, bool vfReset, bool clipping, bool shifting, bool displayWait) :
-	_display(64, 32, 8, "CHIP 8"),
+	_display(64, 32, 16, "CHIP 8"),
 	_memory(),
 	_input(),
 	_audio(),
@@ -14,7 +14,8 @@ Chip8::Chip8(size_t cyclesPerFrame, bool saveLoadIncrement, bool vfReset, bool c
 	_vfReset(vfReset),
 	_clipping(clipping),
 	_shifting(shifting),
-	_displayWait(displayWait)
+	_displayWait(displayWait),
+	_audioEnabled(true)
 { }
 
 void Chip8::initialize()
@@ -48,7 +49,7 @@ void Chip8::update()
 			}
 
 			// If "Display wait" option is enabled, we must draw only one sprite per frame
-			if (isDisplayWaitEnabled() && _cpu.didDrawThisFrame())
+			if (isDisplayWaitEnabled() && _cpu.drawThisFrame())
 			{
 				break;
 			}
@@ -58,20 +59,23 @@ void Chip8::update()
 		sf::sleep(sf::seconds(std::max(frameDuration - frameTimer.getElapsedTime().asSeconds(), 0.f)));
 
 		// Draw only when needed
-		if (_cpu.didDrawThisFrame()) // TODO: rename variable
+		if (_cpu.drawThisFrame())
 		{
 			_display.display();
 			_cpu.setDrawThisFrame(false);
 		}
 
-		// Play audio before we update the timer
-		if (_cpu.isSoundTimerActive())
+		if (_audioEnabled)
 		{
-			_audio.playSound();
-		}
-		else
-		{
-			_audio.stopSound();
+			// Play audio before we update the timer
+			if (_cpu.isSoundTimerActive())
+			{
+				_audio.playSound();
+			}
+			else
+			{
+				_audio.stopSound();
+			}
 		}
 
 		// Update timer once per frame

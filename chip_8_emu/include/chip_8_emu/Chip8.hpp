@@ -26,6 +26,8 @@ public:
 	bool isShiftingEnabled() { return _shifting; }
 	bool isDisplayWaitEnabled() { return _displayWait; }
 
+	void setAudioEnabled(bool audioEnabled) { _audioEnabled = audioEnabled; }
+
 	static const uint16_t FONT_START_ADDRESS = 0x050;
 	static const uint16_t ROM_START_ADDR = 0x200;
 
@@ -45,4 +47,6 @@ private:
 	bool _clipping;
 	bool _shifting;
 	bool _displayWait;
+	
+	bool _audioEnabled;
 };

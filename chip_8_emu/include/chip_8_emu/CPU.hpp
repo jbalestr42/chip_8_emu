@@ -17,7 +17,7 @@ public:
 	bool tick();
 	void updateTimers();
 
-	bool didDrawThisFrame() { return _drawThisFrame; }
+	bool drawThisFrame() { return _drawThisFrame; }
 	void setDrawThisFrame(bool drawThisFrame) { _drawThisFrame = drawThisFrame; }
 	bool isSoundTimerActive() { return _soundTimer > 0; }
 
