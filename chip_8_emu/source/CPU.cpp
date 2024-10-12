@@ -350,12 +350,11 @@ bool CPU::tick()
 		uint8_t b2 = (opCode & (0x00F0)) >> 4;
 		uint8_t b1 = (opCode & (0x000F));
 		instruction->action(opCode, b3, b2, b1);
-
-		//std::cout << "[Code] " << std::hex << opCode << " | " << instruction->code << std::endl; // TODO: verbose
 	}
 	else
 	{
 		std::cout << "[ERROR] Unknown opCode [" << std::hex << opCode << "]" << std::endl;
+		return false;
 	}
 
 	return true;
