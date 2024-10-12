@@ -28,6 +28,7 @@ public:
 private:
 	sf::RenderWindow _window;
 	sf::VertexArray _vertices;
+	sf::Shader _shader;
 
 	uint8_t _width;
 	uint8_t _height;
