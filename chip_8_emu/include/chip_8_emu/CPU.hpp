@@ -17,9 +17,10 @@ public:
 	bool tick();
 	void updateTimers();
 
-	bool drawThisFrame() { return _drawThisFrame; }
+	bool drawThisFrame() const { return _drawThisFrame; }
 	void setDrawThisFrame(bool drawThisFrame) { _drawThisFrame = drawThisFrame; }
-	bool isSoundTimerActive() { return _soundTimer > 0; }
+
+	bool isSoundTimerActive() const { return _soundTimer > 0; }
 
 	static const size_t MAX_REGISTER = 16;
 
@@ -46,7 +47,7 @@ private:
 	};
 
 	void addInstruction(uint16_t mask, uint16_t code, std::function<void(uint16_t opCode, uint8_t b3, uint8_t b2, uint8_t b1)> action);
-	CPU::Instruction* getInstruction(uint16_t opCode);
+	const CPU::Instruction* getInstruction(uint16_t opCode) const;
 
 	Chip8& _emulator;
 	Memory& _memory;

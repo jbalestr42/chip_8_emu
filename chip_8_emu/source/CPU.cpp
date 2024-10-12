@@ -320,11 +320,11 @@ void CPU::addInstruction(uint16_t mask, uint16_t code, std::function<void(uint16
 	_instructions.emplace_back(CPU::Instruction(mask, code, action));
 }
 
-CPU::Instruction* CPU::getInstruction(uint16_t opCode)
+const CPU::Instruction* CPU::getInstruction(uint16_t opCode) const
 {
 	for (size_t i = 0; i < _instructions.size(); i++)
 	{
-		CPU::Instruction* instruction = &_instructions[i];
+		const CPU::Instruction* instruction = &_instructions[i];
 		if ((instruction->mask & opCode) == instruction->code)
 		{
 			return instruction;
@@ -342,10 +342,12 @@ bool CPU::tick()
 	_pc += 2;
 
 	// Fetch the instruction
-	CPU::Instruction* instruction = getInstruction(opCode);
+	const CPU::Instruction* instruction = getInstruction(opCode);
 
+	// Execute the instruction
 	if (instruction != nullptr)
 	{
+		// We provide bytes at position 1, 2, 3 for convenience, they are not always used
 		uint8_t b3 = (opCode & (0x0F00)) >> 8;
 		uint8_t b2 = (opCode & (0x00F0)) >> 4;
 		uint8_t b1 = (opCode & (0x000F));

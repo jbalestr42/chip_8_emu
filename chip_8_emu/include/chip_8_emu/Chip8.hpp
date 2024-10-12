@@ -20,11 +20,11 @@ public:
 	Input& input() { return _input; }
 	Memory& memory() { return _memory; }
 
-	bool isSaveLoadIncrementEnabled() { return _saveLoadIncrement; }
-	bool isVfResetEnabled() { return _vfReset; }
-	bool isClippingEnabled() { return _clipping; }
-	bool isShiftingEnabled() { return _shifting; }
-	bool isDisplayWaitEnabled() { return _displayWait; }
+	bool isSaveLoadIncrementEnabled() const { return _saveLoadIncrement; }
+	bool isVfResetEnabled() const { return _vfReset; }
+	bool isClippingEnabled() const { return _clipping; }
+	bool isShiftingEnabled() const { return _shifting; }
+	bool isDisplayWaitEnabled() const { return _displayWait; }
 
 	void setAudioEnabled(bool audioEnabled) { _audioEnabled = audioEnabled; }
 
@@ -40,7 +40,7 @@ private:
 	Audio _audio;
 	CPU _cpu;
 
-	// These value are configurable because some games may depends on it to run properly
+	// Configurable because some games may depends on it to run properly
 	size_t _cyclesPerFrame;
 	bool _saveLoadIncrement;
 	bool _vfReset;

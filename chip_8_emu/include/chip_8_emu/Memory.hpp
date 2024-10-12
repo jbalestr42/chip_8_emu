@@ -5,7 +5,7 @@
 class Memory
 {
 public:
-	uint8_t read8(uint16_t addr);
+	uint8_t read8(uint16_t addr) const;
 	void write8(uint16_t addr, uint8_t value);
 	void copyBuffer(uint16_t addr, uint8_t* buffer, size_t size);
 	void clear();

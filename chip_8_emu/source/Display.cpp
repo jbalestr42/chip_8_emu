@@ -64,7 +64,7 @@ void Display::close()
 	_window.close();
 }
 
-bool Display::isOpen()
+bool Display::isOpen() const
 {
 	return _window.isOpen();
 }
@@ -76,12 +76,12 @@ void Display::pollEvent()
 	{
 		if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
 		{
-			_window.close();
+			close();
 		}
 	}
 }
 
-bool Display::isPixelOn(uint8_t x, uint8_t y)
+bool Display::isPixelOn(uint8_t x, uint8_t y) const
 {
 	return getPixel(x, y) == _pixelColorOn;
 }
@@ -91,7 +91,7 @@ void Display::putPixel(uint8_t x, uint8_t y, bool isOn)
 	putPixel(x, y, isOn ? _pixelColorOn : _pixelColorOff);
 }
 
-sf::Color Display::getPixel(uint8_t x, uint8_t y)
+sf::Color Display::getPixel(uint8_t x, uint8_t y) const
 {
 	return _vertices[(x + y * _width) * 4].color;
 }

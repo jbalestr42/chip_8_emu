@@ -42,12 +42,12 @@ void Input::tick()
 	}
 }
 
-bool Input::isKeyDown(uint8_t keyCode)
+bool Input::isKeyDown(uint8_t keyCode) const
 {
 	return _inputs[keyCode] == Input::KeyState::Pressed || _inputs[keyCode] == Input::KeyState::Down;
 }
 
-Input::KeyState Input::getKeyState(uint8_t keyCode)
+Input::KeyState Input::getKeyState(uint8_t keyCode) const
 {
 	return _inputs[keyCode];
 }

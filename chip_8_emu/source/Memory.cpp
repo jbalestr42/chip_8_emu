@@ -1,7 +1,7 @@
 #include "Memory.hpp"
 #include <cstring>
 
-uint8_t Memory::read8(uint16_t addr)
+uint8_t Memory::read8(uint16_t addr) const
 {
 	return _data[addr];
 }

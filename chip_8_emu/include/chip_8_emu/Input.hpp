@@ -17,8 +17,8 @@ public:
 	Input();
 
 	void tick();
-	bool isKeyDown(uint8_t keyCode);
-	Input::KeyState getKeyState(uint8_t keyCode);
+	bool isKeyDown(uint8_t keyCode) const;
+	Input::KeyState getKeyState(uint8_t keyCode) const;
 
 	static const uint8_t INPUT_COUNT = 16;
 

@@ -10,16 +10,16 @@ public:
 	void display();
 	void clear();
 	void close();
-	bool isOpen();
+	bool isOpen() const;
 	void pollEvent();
 
 	uint8_t width() const { return _width; }
 	uint8_t height() const { return _height; }
 
-	bool isPixelOn(uint8_t x, uint8_t y);
+	bool isPixelOn(uint8_t x, uint8_t y) const;
 	void putPixel(uint8_t x, uint8_t y, bool isOn);
 
-	sf::Color getPixel(uint8_t x, uint8_t y);
+	sf::Color getPixel(uint8_t x, uint8_t y) const;
 	void putPixel(uint8_t x, uint8_t y, sf::Color color);
 
 	void setPixelColorOff(sf::Color color) { _pixelColorOff = color; }
