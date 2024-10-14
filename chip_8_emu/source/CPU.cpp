@@ -163,7 +163,7 @@ void CPU::initialize()
 		_pc = _registers[0] + NNN;
 	});
 	addInstruction(0xF000, 0xC000, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
-		// CXNN: Sets VX to the result of a bitwise and operation on a random number and NN.
+		// CXNN: Sets VX to the result of a bitwise and operation on a random number and NN
 		_registers[X] = rand() & NN;
 	});
 	addInstruction(0xF000, 0xD000, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
