@@ -3,18 +3,13 @@
 #include <iostream>
 #include <fstream>
 
-Chip8::Chip8(size_t cyclesPerFrame, bool saveLoadIncrement, bool vfReset, bool clipping, bool shifting, bool displayWait) :
+Chip8::Chip8(size_t cyclesPerFrame) :
 	_display(64, 32, 16, "CHIP 8"),
 	_memory(),
 	_input(),
 	_audio(),
 	_cpu(*this),
 	_cyclesPerFrame(cyclesPerFrame),
-	_saveLoadIncrement(saveLoadIncrement),
-	_vfReset(vfReset),
-	_clipping(clipping),
-	_shifting(shifting),
-	_displayWait(displayWait),
 	_audioEnabled(true)
 { }
 
@@ -27,8 +22,6 @@ void Chip8::initialize()
 void Chip8::update()
 {
 	sf::Clock frameTimer;
-	sf::Clock clock;
-	size_t frames = 0;
 	bool isRunning = true;
 	const float frameDuration = 1.f / 60.f; // Use to run at 60Hz
 
@@ -47,23 +40,12 @@ void Chip8::update()
 				isRunning = false;
 				break;
 			}
-
-			// If "Display wait" option is enabled, we must draw only one sprite per frame
-			if (isDisplayWaitEnabled() && _cpu.drawThisFrame())
-			{
-				break;
-			}
 		}
 
 		// Wait to reach 60fps
 		sf::sleep(sf::seconds(std::max(frameDuration - frameTimer.getElapsedTime().asSeconds(), 0.f)));
 
-		// Draw only when needed
-		if (_cpu.drawThisFrame())
-		{
-			_display.display();
-			_cpu.setDrawThisFrame(false);
-		}
+		_display.display();
 
 		if (_audioEnabled)
 		{
@@ -80,15 +62,6 @@ void Chip8::update()
 
 		// Update timer once per frame
 		_cpu.updateTimers();
-
-		// Compute fps
-		if (clock.getElapsedTime().asSeconds() >= 1.f)
-		{
-			std::cout << std::dec << "[FPS] " << frames << std::endl;
-			frames = 0;
-			clock.restart();
-		}
-		frames++;
 	}
 }
 
@@ -135,7 +108,7 @@ bool Chip8::loadRom(const std::string& path)
 			_memory.copyBuffer(Chip8::ROM_START_ADDR, &buffer[0], length);
 
 			file.close();
-	
+
 			return true;
 		}
 	}

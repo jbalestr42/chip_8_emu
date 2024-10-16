@@ -17,9 +17,6 @@ public:
 	bool tick();
 	void updateTimers();
 
-	bool drawThisFrame() const { return _drawThisFrame; }
-	void setDrawThisFrame(bool drawThisFrame) { _drawThisFrame = drawThisFrame; }
-
 	bool isSoundTimerActive() const { return _soundTimer > 0; }
 
 	static const size_t MAX_REGISTER = 16;
@@ -57,6 +54,4 @@ private:
 
 	uint8_t _delayTimer;
 	uint8_t _soundTimer;
-
-	bool _drawThisFrame;
 };

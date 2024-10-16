@@ -27,26 +27,11 @@ Display::Display(uint8_t width, uint8_t height, uint8_t pixelSize, const std::st
 			quad[3].color = _pixelColorOff;
 		}
 	}
-
-	const std::string cheapCrtFragmentShader = \
-		"#version 130" \
-		"uniform float amount = 0.1;" \
-		"uniform float thickness = 2.0;" \
-		"uniform float spacing = 1.0;" \
-		"void main()" \
-		"{" \
-		"	vec4 pixel = gl_Color;" \
-		"	if (mod(gl_FragCoord.y, round(thickness + spacing)) < round(spacing))" \
-		"		pixel = vec4(pixel.rgb * (1.0 - amount), pixel.a);" \
-		"	gl_FragColor = pixel;" \
-		"}" \
-		;
-	_shader.loadFromMemory(cheapCrtFragmentShader, sf::Shader::Fragment);
 }
 
 void Display::display()
 {
-	_window.draw(_vertices, &_shader);
+	_window.draw(_vertices);
 	_window.display();
 }
 

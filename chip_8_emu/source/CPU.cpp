@@ -1,5 +1,5 @@
-#include "CPU.hpp"
 #include "Chip8.hpp"
+#include "CPU.hpp"
 #include "Display.hpp"
 #include "Input.hpp"
 #include "Memory.hpp"
@@ -13,8 +13,7 @@ CPU::CPU(Chip8& emulator) :
 	_pc(Chip8::ROM_START_ADDR),
 	_I(0),
 	_delayTimer(0),
-	_soundTimer(0),
-	_drawThisFrame(false)
+	_soundTimer(0)
 {
 	memset(_registers, 0, CPU::MAX_REGISTER);
 	_memory.clear();
@@ -83,26 +82,17 @@ void CPU::initialize()
 	addInstruction(0xF00F, 0x8001, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
 		// 8XY1: Sets VX to VX or VY
 		_registers[X] |= _registers[Y];
-		if (_emulator.isVfResetEnabled())
-		{
-			_registers[0xF] = 0;
-		}
+		_registers[0xF] = 0;
 	});
 	addInstruction(0xF00F, 0x8002, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
 		// 8XY2: Sets VX to VX and VY
 		_registers[X] &= _registers[Y];
-		if (_emulator.isVfResetEnabled())
-		{
-			_registers[0xF] = 0;
-		}
+		_registers[0xF] = 0;
 	});
 	addInstruction(0xF00F, 0x8003, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
 		// BXY3: Sets VX to VX xor VY
 		_registers[X] ^= _registers[Y];
-		if (_emulator.isVfResetEnabled())
-		{
-			_registers[0xF] = 0;
-		}
+		_registers[0xF] = 0;
 	});
 	addInstruction(0xF00F, 0x8004, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
 		// 8XY4: Adds VY to VX.
@@ -122,10 +112,7 @@ void CPU::initialize()
 		// 8XY6: Shifts VX to the right by 1
 		// Stores the least significant bit of VX prior to the shift into VF
 		bool isOverflow = _registers[X] & 0x01;
-		if (_emulator.isShiftingEnabled())
-		{
-			_registers[X] = _registers[Y];
-		}
+		_registers[X] = _registers[Y];
 		_registers[X] >>= 1;
 		_registers[0xF] = isOverflow;
 	});
@@ -140,10 +127,7 @@ void CPU::initialize()
 		// 8XYE: Shifts VX to the left by 1
 		// Sets VF to 1 if the most significant bit of VX prior to that shift was set, or to 0 if it was unset
 		bool isOverflow = (_registers[X] & 0x80) >> 7;
-		if (_emulator.isShiftingEnabled())
-		{
-			_registers[X] = _registers[Y];
-		}
+		_registers[X] = _registers[Y];
 		_registers[X] <<= 1;
 		_registers[0xF] = isOverflow;
 	});
@@ -185,16 +169,6 @@ void CPU::initialize()
 			// Sprite are always 8 pixels wide
 			for (uint8_t x = 0; x < Chip8::SPRITE_WIDTH; x++)
 			{
-				if (_emulator.isClippingEnabled())
-				{
-					// A sprite will be clipped if it’s partially drawn outside of display
-					// but it will be wrapped around if all of the sprite is drawn outside of the display
-					if ((startX < 64 && startX + x > 63) || (startY < 32 && startY + y > 31))
-					{
-						continue;
-					}
-				}
-
 				uint8_t spritePixel = spriteY & (0x80 >> x);
 				if (spritePixel)
 				{
@@ -213,7 +187,6 @@ void CPU::initialize()
 				}
 			}
 		}
-		_drawThisFrame = true;
 	});
 	addInstruction(0xF0FF, 0xE09E, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
 		// EX9E: Skips the next instruction if the key stored in VX is pressed
@@ -285,11 +258,6 @@ void CPU::initialize()
 		{
 			_memory.write8(_I + i, _registers[i]);
 		}
-
-		if (_emulator.isSaveLoadIncrementEnabled())
-		{
-			_I += X + 1;
-		}
 	});
 	addInstruction(0xF0FF, 0xF065, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
 		// FX65: Fills from V0 to VX (including VX) with values from memory, starting at address I
@@ -297,11 +265,6 @@ void CPU::initialize()
 		for (uint8_t i = 0; i <= X; i++)
 		{
 			_registers[i] = _memory.read8(_I + i);
-		}
-
-		if (_emulator.isSaveLoadIncrementEnabled())
-		{
-			_I += X + 1;
 		}
 	});
 }
