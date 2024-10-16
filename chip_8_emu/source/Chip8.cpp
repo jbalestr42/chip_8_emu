@@ -19,16 +19,20 @@ void Chip8::update()
 {
 	sf::Clock frameTimer;
 	const float frameDuration = 1.f / 60.f; // Use to run at 60Hz
+	bool isRunning = true;
 
-	while (_display.isOpen())
+	while (_display.isOpen() && isRunning)
 	{
 		_display.pollEvent();
 
 		frameTimer.restart();
 		for (size_t i = 0; i < _cyclesPerFrame; i++)
 		{
-			// Tick your CPU here
-			_cpu.tick();
+			if (!_cpu.tick())
+			{
+				isRunning = false;
+				break;
+			}
 		}
 
 		// Wait to reach 60fps
