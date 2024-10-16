@@ -24,9 +24,44 @@ void CPU::initialize()
 		// 00E0: Clears the screen
 		_display.clear();
 	});
+	addInstruction(0xFFFF, 0x00EE, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
+		// 00EE: Returns from a subroutine
+		// Set pc to the the last address from the stack
+		if (!_stack.empty())
+		{
+			_pc = _stack.top();
+			_stack.pop();
+		}
+	});
 	addInstruction(0xF000, 0x1000, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
 		// 1NNN: Jumps to address NNN
 		_pc = NNN;
+	});
+	addInstruction(0xF000, 0x2000, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
+		// 2NNN: Calls subroutine at NNN
+		_stack.push(_pc);
+		_pc = NNN;
+	});
+	addInstruction(0xF000, 0x3000, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
+		// 3XNN: Skips the next instruction if VX equals NN
+		if (_registers[X] == NN)
+		{
+			_pc += 2;
+		}
+	});
+	addInstruction(0xF000, 0x4000, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
+		// 4XNN: Skips the next instruction if VX does not equal NN
+		if (_registers[X] != NN)
+		{
+			_pc += 2;
+		}
+	});
+	addInstruction(0xF00F, 0x5000, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
+		// 5XY0: Skips the next instruction if VX equals VY
+		if (_registers[X] == _registers[Y])
+		{
+			_pc += 2;
+		}
 	});
 	addInstruction(0xF000, 0x6000, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
 		// 6XNN: Sets VX to NN
@@ -36,9 +71,67 @@ void CPU::initialize()
 		// 7XNN: Adds NN to VX
 		_registers[X] += NN;
 	});
+	addInstruction(0xF00F, 0x8000, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
+		// 8XY0: Sets VX to the value of VY
+		_registers[X] = _registers[Y];
+	});
+	addInstruction(0xF00F, 0x8001, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
+		// 8XY1: Sets VX to VX or VY
+		_registers[X] |= _registers[Y];
+	});
+	addInstruction(0xF00F, 0x8002, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
+		// 8XY2: Sets VX to VX and VY
+		_registers[X] &= _registers[Y];
+	});
+	addInstruction(0xF00F, 0x8003, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
+		// BXY3: Sets VX to VX xor VY
+		_registers[X] ^= _registers[Y];
+	});
+	addInstruction(0xF00F, 0x8004, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
+		// 8XY4: Adds VY to VX.
+		// VF is set to 1 when there's an overflow, and to 0 when there is not
+		_registers[X] = _registers[X] + _registers[Y];
+	});
+	addInstruction(0xF00F, 0x8005, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
+		// 8XY5: VY is subtracted from VX
+		// VF is set to 0 when there's an underflow, and 1 when there is not
+		_registers[X] = _registers[X] - _registers[Y];
+	});
+	addInstruction(0xF00F, 0x8006, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
+		// 8XY6: Shifts VX to the right by 1
+		// Stores the least significant bit of VX prior to the shift into VF
+		_registers[X] = _registers[Y];
+		_registers[X] >>= 1;
+	});
+	addInstruction(0xF00F, 0x8007, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
+		// 8XY7: Sets VX to VY minus VX
+		// VF is set to 0 when there's an underflow, and 1 when there is not
+		_registers[X] = _registers[Y] - _registers[X];
+	});
+	addInstruction(0xF00F, 0x800E, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
+		// 8XYE: Shifts VX to the left by 1
+		// Sets VF to 1 if the most significant bit of VX prior to that shift was set, or to 0 if it was unset
+		_registers[X] = _registers[Y];
+		_registers[X] <<= 1;
+	});
+	addInstruction(0xF00F, 0x9000, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
+		// 9XY0: Skips the next instruction if VX does not equal VY
+		if (_registers[X] != _registers[Y])
+		{
+			_pc += 2;
+		}
+	});
 	addInstruction(0xF000, 0xA000, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
 		// ANNN: Sets I to the address NNN
 		_I = NNN;
+	});
+	addInstruction(0xF000, 0xB000, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
+		// BNNN: Jumps to the address NNN plus V0
+		_pc = _registers[0] + NNN;
+	});
+	addInstruction(0xF000, 0xC000, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
+		// CXNN: Sets VX to the result of a bitwise and operation on a random number and NN
+		_registers[X] = rand() & NN;
 	});
 	addInstruction(0xF000, 0xD000, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
 		// DXYN: Draws a sprite at coordinate (VX, VY) that has a width of 8 pixels and a height of N pixels.
@@ -62,7 +155,6 @@ void CPU::initialize()
 				uint8_t spritePixel = spriteY & (0x80 >> x);
 				if (spritePixel)
 				{
-					// Wrap if going beyond screen boundaries
 					uint8_t posX = (startX + x) % _display.width();
 					uint8_t posY = (startY + y) % _display.height();
 					bool isPixelOn = _display.isPixelOn(posX, posY);
@@ -77,6 +169,35 @@ void CPU::initialize()
 					_display.putPixel(posX, posY, !isPixelOn);
 				}
 			}
+		}
+	});
+	addInstruction(0xF0FF, 0xF01E, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
+		// FX1E: Adds VX to I. VF is not affected
+		_I += _registers[X];
+	});
+	addInstruction(0xF0FF, 0xF033, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
+		// FX33: Stores the binary-coded decimal representation of VX in I:
+		// - hundreds digit in memory at location in I,
+		// - tens digit at location I+1
+		// - ones digit at location I+2.
+		_memory.write8(_I, (_registers[X] / 100) % 10);
+		_memory.write8(_I + 1, (_registers[X] / 10) % 10);
+		_memory.write8(_I + 2, _registers[X] % 10);
+	});
+	addInstruction(0xF0FF, 0xF055, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
+		// FX55: Stores from V0 to VX (including VX) in memory starting at address I
+		// The offset from I is increased by 1 for each value written, but I itself is left unmodified
+		for (uint8_t i = 0; i <= X; i++)
+		{
+			_memory.write8(_I + i, _registers[i]);
+		}
+	});
+	addInstruction(0xF0FF, 0xF065, [&](uint16_t NNN, uint8_t NN, uint8_t N, uint8_t X, uint8_t Y) {
+		// FX65: Fills from V0 to VX (including VX) with values from memory, starting at address I
+		// The offset from I is increased by 1 for each value read, but I itself is left unmodified
+		for (uint8_t i = 0; i <= X; i++)
+		{
+			_registers[i] = _memory.read8(_I + i);
 		}
 	});
 }

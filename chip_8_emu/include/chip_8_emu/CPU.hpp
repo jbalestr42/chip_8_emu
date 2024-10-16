@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <stack>
 
 class Chip8;
 class Display;
@@ -44,4 +45,5 @@ private:
 	uint16_t _pc;
 	uint8_t _registers[CPU::MAX_REGISTER];
 	uint16_t _I;
+	std::stack<uint16_t> _stack;
 };
