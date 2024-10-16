@@ -172,7 +172,6 @@ void CPU::initialize()
 		// I value does not change after the execution of this instruction.
 		// As described above, VF is set to 1 if any screen pixels are flipped from set to unset when the sprite is drawn, and to 0 if that does not happen.
 
-		// Wrap if going beyond screen boundaries
 		uint8_t startX = _registers[X];
 		uint8_t startY = _registers[Y];
 		uint8_t height = N;
@@ -184,7 +183,7 @@ void CPU::initialize()
 			uint8_t spriteY = _memory.read8(_I + y);
 
 			// Sprite are always 8 pixels wide
-			for (uint8_t x = 0; x < 8; x++)
+			for (uint8_t x = 0; x < Chip8::SPRITE_WIDTH; x++)
 			{
 				if (_emulator.isClippingEnabled())
 				{

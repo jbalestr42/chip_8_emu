@@ -30,6 +30,7 @@ public:
 
 	static const uint16_t FONT_START_ADDRESS = 0x050;
 	static const uint16_t ROM_START_ADDR = 0x200;
+	static const uint8_t SPRITE_WIDTH = 8;
 
 private:
 	void loadFont();
