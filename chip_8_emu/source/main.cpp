@@ -12,7 +12,6 @@ int main(int argc, char* argv[])
 	Chip8 emulator(60);
 	if (emulator.loadRom(argv[1]))
 	{
-		emulator.initialize();
 		emulator.update();
 	}
 	else

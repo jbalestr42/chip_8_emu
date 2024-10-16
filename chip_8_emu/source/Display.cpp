@@ -21,32 +21,17 @@ Display::Display(uint8_t width, uint8_t height, uint8_t pixelSize, const std::st
 			quad[2].position = sf::Vector2f(static_cast<float>((x + 1) * _pixelSize), static_cast<float>((y + 1) * _pixelSize));
 			quad[3].position = sf::Vector2f(static_cast<float>(x * _pixelSize), static_cast<float>((y + 1) * _pixelSize));
 
-			quad[0].color = _pixelColorOff;
-			quad[1].color = _pixelColorOff;
-			quad[2].color = _pixelColorOff;
-			quad[3].color = _pixelColorOff;
+			quad[0].color = (x + y) % 2 == 0 ? _pixelColorOff : _pixelColorOn;
+			quad[1].color = (x + y) % 2 == 0 ? _pixelColorOff : _pixelColorOn;
+			quad[2].color = (x + y) % 2 == 0 ? _pixelColorOff : _pixelColorOn;
+			quad[3].color = (x + y) % 2 == 0 ? _pixelColorOff : _pixelColorOn;
 		}
 	}
-
-	const std::string cheapCrtFragmentShader = \
-		"#version 130" \
-		"uniform float amount = 0.1;" \
-		"uniform float thickness = 2.0;" \
-		"uniform float spacing = 1.0;" \
-		"void main()" \
-		"{" \
-		"	vec4 pixel = gl_Color;" \
-		"	if (mod(gl_FragCoord.y, round(thickness + spacing)) < round(spacing))" \
-		"		pixel = vec4(pixel.rgb * (1.0 - amount), pixel.a);" \
-		"	gl_FragColor = pixel;" \
-		"}" \
-		;
-	_shader.loadFromMemory(cheapCrtFragmentShader, sf::Shader::Fragment);
 }
 
 void Display::display()
 {
-	_window.draw(_vertices, &_shader);
+	_window.draw(_vertices);
 	_window.display();
 }
 

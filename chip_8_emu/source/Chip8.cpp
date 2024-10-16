@@ -1,6 +1,5 @@
 #include "Chip8.hpp"
 #include <SFML/System/Clock.hpp>
-#include <iostream>
 #include <fstream>
 
 Chip8::Chip8(size_t cyclesPerFrame) :
@@ -9,11 +8,6 @@ Chip8::Chip8(size_t cyclesPerFrame) :
 	_cpu(*this),
 	_cyclesPerFrame(cyclesPerFrame)
 { }
-
-void Chip8::initialize()
-{
-	_cpu.initialize();
-}
 
 void Chip8::update()
 {
@@ -27,7 +21,6 @@ void Chip8::update()
 		frameTimer.restart();
 		for (size_t i = 0; i < _cyclesPerFrame; i++)
 		{
-			// Tick your CPU here
 			_cpu.tick();
 		}
 

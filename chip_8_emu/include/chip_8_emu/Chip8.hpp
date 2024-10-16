@@ -10,7 +10,6 @@ class Chip8
 public:
 	Chip8(size_t cyclesPerFrame);
 
-	void initialize();
 	void update();
 	bool loadRom(const std::string& path);
 
