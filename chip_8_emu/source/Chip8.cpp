@@ -3,118 +3,39 @@
 #include <iostream>
 #include <fstream>
 
-Chip8::Chip8(size_t cyclesPerFrame, bool saveLoadIncrement, bool vfReset, bool clipping, bool shifting, bool displayWait) :
+Chip8::Chip8(size_t cyclesPerFrame) :
 	_display(64, 32, 16, "CHIP 8"),
 	_memory(),
-	_input(),
-	_audio(),
 	_cpu(*this),
-	_cyclesPerFrame(cyclesPerFrame),
-	_saveLoadIncrement(saveLoadIncrement),
-	_vfReset(vfReset),
-	_clipping(clipping),
-	_shifting(shifting),
-	_displayWait(displayWait),
-	_audioEnabled(true)
+	_cyclesPerFrame(cyclesPerFrame)
 { }
 
 void Chip8::initialize()
 {
-	loadFont();
 	_cpu.initialize();
 }
 
 void Chip8::update()
 {
 	sf::Clock frameTimer;
-	sf::Clock clock;
-	size_t frames = 0;
-	bool isRunning = true;
 	const float frameDuration = 1.f / 60.f; // Use to run at 60Hz
 
-	while (_display.isOpen() && isRunning)
+	while (_display.isOpen())
 	{
 		_display.pollEvent();
-
-		_input.tick();
 
 		frameTimer.restart();
 		for (size_t i = 0; i < _cyclesPerFrame; i++)
 		{
-			if (!_cpu.tick())
-			{
-				// An error occured, stop execution
-				isRunning = false;
-				break;
-			}
-
-			// If "Display wait" option is enabled, we must draw only one sprite per frame
-			if (isDisplayWaitEnabled() && _cpu.drawThisFrame())
-			{
-				break;
-			}
+			// Tick your CPU here
+			_cpu.tick();
 		}
 
 		// Wait to reach 60fps
 		sf::sleep(sf::seconds(std::max(frameDuration - frameTimer.getElapsedTime().asSeconds(), 0.f)));
 
-		// Draw only when needed
-		if (_cpu.drawThisFrame())
-		{
-			_display.display();
-			_cpu.setDrawThisFrame(false);
-		}
-
-		if (_audioEnabled)
-		{
-			// Play audio before we update the timer
-			if (_cpu.isSoundTimerActive())
-			{
-				_audio.playSound();
-			}
-			else
-			{
-				_audio.stopSound();
-			}
-		}
-
-		// Update timer once per frame
-		_cpu.updateTimers();
-
-		// Compute fps
-		if (clock.getElapsedTime().asSeconds() >= 1.f)
-		{
-			std::cout << std::dec << "[FPS] " << frames << std::endl;
-			frames = 0;
-			clock.restart();
-		}
-		frames++;
+		_display.display();
 	}
-}
-
-void Chip8::loadFont()
-{
-	std::vector<uint8_t> fontData =
-	{
-		0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
-		0x20, 0x60, 0x20, 0x20, 0x70, // 1
-		0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
-		0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
-		0x90, 0x90, 0xF0, 0x10, 0x10, // 4
-		0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
-		0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
-		0xF0, 0x10, 0x20, 0x40, 0x40, // 7
-		0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
-		0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
-		0xF0, 0x90, 0xF0, 0x90, 0x90, // A
-		0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
-		0xF0, 0x80, 0x80, 0x80, 0xF0, // C
-		0xE0, 0x90, 0x90, 0x90, 0xE0, // D
-		0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
-		0xF0, 0x80, 0xF0, 0x80, 0x80  // F
-	};
-
-	_memory.copyBuffer(Chip8::FONT_START_ADDRESS, &fontData[0], fontData.size());
 }
 
 bool Chip8::loadRom(const std::string& path)

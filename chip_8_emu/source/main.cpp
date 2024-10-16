@@ -9,12 +9,7 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 
-	Chip8 emulator(60, true, true, true, true, true);
-	emulator.display().setPixelColorOff(sf::Color(35, 145, 157, 255));
-	emulator.display().setPixelColorOn(sf::Color(180, 252, 252, 255));
-	emulator.display().clear();
-	emulator.setAudioEnabled(false);
-
+	Chip8 emulator(60);
 	if (emulator.loadRom(argv[1]))
 	{
 		emulator.initialize();

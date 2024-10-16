@@ -3,20 +3,16 @@ cmake_minimum_required(VERSION 3.8)
 project(chip_8_emu)
 
 set(HEADER_FILES
-	include/${PROJECT_NAME}/Audio.hpp
 	include/${PROJECT_NAME}/Chip8.hpp
 	include/${PROJECT_NAME}/CPU.hpp
-	include/${PROJECT_NAME}/Input.hpp
 	include/${PROJECT_NAME}/Memory.hpp
 	include/${PROJECT_NAME}/Display.hpp
 )
 
 set(SOURCE_FILES
 	source/main.cpp
-	source/Audio.cpp
 	source/Chip8.cpp
 	source/CPU.cpp
-	source/Input.cpp
 	source/Memory.cpp
 	source/Display.cpp
 )
