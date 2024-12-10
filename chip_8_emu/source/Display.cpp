@@ -1,7 +1,7 @@
 #include "Display.hpp"
 
 Display::Display(uint8_t width, uint8_t height, uint8_t pixelSize, const std::string& title) :
-	_window(sf::VideoMode(width* pixelSize, height* pixelSize), title),
+	_window(sf::VideoMode(width * pixelSize, height * pixelSize), title),
 	_width(width),
 	_height(height),
 	_pixelSize(pixelSize),
