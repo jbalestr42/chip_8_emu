@@ -3,22 +3,22 @@
 
 Input::Input()
 {
-	_bindings[0] = sf::Keyboard::Key::Num0;
-	_bindings[1] = sf::Keyboard::Key::Num1;
-	_bindings[2] = sf::Keyboard::Key::Num2;
-	_bindings[3] = sf::Keyboard::Key::Num3;
-	_bindings[4] = sf::Keyboard::Key::Num4;
-	_bindings[5] = sf::Keyboard::Key::Num5;
-	_bindings[6] = sf::Keyboard::Key::Num6;
-	_bindings[7] = sf::Keyboard::Key::Num7;
-	_bindings[8] = sf::Keyboard::Key::Num8;
-	_bindings[9] = sf::Keyboard::Key::Num9;
-	_bindings[10] = sf::Keyboard::Key::A;
-	_bindings[11] = sf::Keyboard::Key::B;
-	_bindings[12] = sf::Keyboard::Key::C;
-	_bindings[13] = sf::Keyboard::Key::D;
-	_bindings[14] = sf::Keyboard::Key::E;
-	_bindings[15] = sf::Keyboard::Key::F;
+	_bindings[0] = sf::Keyboard::Key::Num1;
+	_bindings[1] = sf::Keyboard::Key::Num2;
+	_bindings[2] = sf::Keyboard::Key::Num3;
+	_bindings[3] = sf::Keyboard::Key::Num4;
+	_bindings[4] = sf::Keyboard::Key::A;
+	_bindings[5] = sf::Keyboard::Key::Z;
+	_bindings[6] = sf::Keyboard::Key::E;
+	_bindings[7] = sf::Keyboard::Key::R;
+	_bindings[8] = sf::Keyboard::Key::Q;
+	_bindings[9] = sf::Keyboard::Key::S;
+	_bindings[10] = sf::Keyboard::Key::D;
+	_bindings[11] = sf::Keyboard::Key::F;
+	_bindings[12] = sf::Keyboard::Key::W;
+	_bindings[13] = sf::Keyboard::Key::X;
+	_bindings[14] = sf::Keyboard::Key::C;
+	_bindings[15] = sf::Keyboard::Key::V;
 	
 	memset(&_inputs, 0, Input::INPUT_COUNT);
 }
