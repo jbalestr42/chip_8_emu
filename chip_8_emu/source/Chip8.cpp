@@ -12,7 +12,7 @@ Chip8::Chip8(size_t cyclesPerFrame) :
 void Chip8::update()
 {
 	sf::Clock frameTimer;
-	const float frameDuration = 1.f / 60.f; // Use to run at 60Hz
+	const float frameDuration = 1.f / 60.f;
 
 	while (_display.isOpen())
 	{
