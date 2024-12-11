@@ -36,5 +36,6 @@ Debug/
 LogsCmp/
 Debug/
 Release/
-roms/
 build/
+roms/*
+!roms/tests
