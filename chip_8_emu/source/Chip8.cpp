@@ -23,7 +23,7 @@ void Chip8::update()
 {
 	sf::Clock frameTimer;
 	bool isRunning = true;
-	const float frameDuration = 1.f / 60.f; // Use to run at 60Hz
+	const float frameDuration = 1.f / 60.f;
 
 	while (_display.isOpen() && isRunning)
 	{
