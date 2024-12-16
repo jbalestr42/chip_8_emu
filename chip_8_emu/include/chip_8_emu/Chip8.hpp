@@ -8,7 +8,7 @@
 class Chip8
 {
 public:
-	Chip8(size_t pixelSize, size_t cyclesPerFrame);
+	Chip8(uint8_t pixelSize, size_t cyclesPerFrame);
 
 	void update();
 	bool loadRom(const std::string& path);
