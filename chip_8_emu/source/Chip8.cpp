@@ -2,8 +2,8 @@
 #include <SFML/System/Clock.hpp>
 #include <fstream>
 
-Chip8::Chip8(size_t cyclesPerFrame) :
-	_display(64, 32, 16, "CHIP 8"),
+Chip8::Chip8(size_t pixelSize, size_t cyclesPerFrame) :
+	_display(64, 32, pixelSize, "CHIP 8"),
 	_memory(),
 	_cpu(*this),
 	_cyclesPerFrame(cyclesPerFrame)
